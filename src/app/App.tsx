@@ -13,10 +13,14 @@ import { Stats } from "./components/sections/Stats";
 import { Testimonials } from "./components/sections/Testimonials";
 import { CTA } from "./components/sections/CTA";
 import { WhatsAppFloat } from "./components/WhatsAppFloat";
+import { QuoteCalculator } from "./components/QuoteCalculator";
+import { TechServicesModal } from "./components/TechServicesModal";
 
 export default function App() {
   const { scrolled, progress } = useScrollProgress();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [quoteOpen, setQuoteOpen] = useState(false);
+  const [techServicesOpen, setTechServicesOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased">
@@ -39,7 +43,10 @@ export default function App() {
       <main>
         <Hero />
         <TechMarquee />
-        <Solutions />
+        <Solutions
+          onOpenQuote={() => setQuoteOpen(true)}
+          onOpenTechServices={() => setTechServicesOpen(true)}
+        />
         <Products />
         <Services />
         <Process />
@@ -50,6 +57,11 @@ export default function App() {
 
       <Footer />
       <WhatsAppFloat />
+      <QuoteCalculator open={quoteOpen} onClose={() => setQuoteOpen(false)} />
+      <TechServicesModal
+        open={techServicesOpen}
+        onClose={() => setTechServicesOpen(false)}
+      />
     </div>
   );
 }
