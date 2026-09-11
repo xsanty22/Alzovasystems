@@ -1,0 +1,127 @@
+/* KEEP_IN_SYNC(fullscreen/resources/figmake/shadcn/globals.css) */
+
+:root {
+  --font-size: 16px;
+
+  /* ALZOVA Dark Tech Base */
+  --background: #0B0B0B;
+  --foreground: #FFFFFF;
+  --card: #0A1A2F;
+  --card-foreground: #FFFFFF;
+  --popover: #0A1A2F;
+  --popover-foreground: #FFFFFF;
+
+  /* Electric Blue (primary) */
+  --primary: #0066FF;
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #0F2440;
+  --secondary-foreground: #F5F7FA;
+
+  --muted: #0F1C30;
+  --muted-foreground: #8B94A8;
+
+  --accent: #0066FF;
+  --accent-foreground: #FFFFFF;
+
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.05);
+  --input-background: rgba(255, 255, 255, 0.03);
+  --switch-background: #1E3A5F;
+
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #0066FF;
+
+  --chart-1: #0066FF;
+  --chart-2: #00C2FF;
+  --chart-3: #7C3AED;
+  --chart-4: #06B6D4;
+  --chart-5: #3B82F6;
+
+  --radius: 0.75rem;
+
+  --sidebar: #0A1A2F;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #0066FF;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #0F2440;
+  --sidebar-accent-foreground: #F5F7FA;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #0066FF;
+}
+
+/* El sitio es dark por diseño; .dark mantiene consistencia */
+.dark {
+  --background: #0B0B0B;
+  --foreground: #FFFFFF;
+  --card: #0A1A2F;
+  --card-foreground: #FFFFFF;
+  --popover: #0A1A2F;
+  --popover-foreground: #FFFFFF;
+  --primary: #0066FF;
+  --primary-foreground: #FFFFFF;
+  --secondary: #0F2440;
+  --secondary-foreground: #F5F7FA;
+  --muted: #0F1C30;
+  --muted-foreground: #8B94A8;
+  --accent: #0066FF;
+  --accent-foreground: #FFFFFF;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.05);
+  --ring: #0066FF;
+  --sidebar: #0A1A2F;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #0066FF;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #0F2440;
+  --sidebar-accent-foreground: #F5F7FA;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #0066FF;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
