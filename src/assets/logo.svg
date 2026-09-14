@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A5CB8"/>
+      <stop offset="100%" stop-color="#0066FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Pata izquierda blanca (parte alta) -->
+  <path d="M 100 20 L 40 180 L 70 180 L 100 95 Z" fill="#FFFFFF"/>
+
+  <!-- Pata derecha blanca (parte alta) -->
+  <path d="M 100 20 L 160 180 L 130 180 L 100 95 Z" fill="#FFFFFF"/>
+
+  <!-- Pata izquierda azul (parte baja) -->
+  <path d="M 100 100 L 60 200 L 90 200 L 100 172 Z" fill="url(#blueGrad)"/>
+
+  <!-- Pata derecha azul (parte baja) -->
+  <path d="M 100 100 L 140 200 L 110 200 L 100 172 Z" fill="url(#blueGrad)"/>
+</svg>
