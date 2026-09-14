@@ -122,6 +122,7 @@ export function QuoteCalculator({ open, onClose }: Props) {
       const modsList = modules.filter((m) => selectedModules.includes(m.id));
       const extsList = extras.filter((e) => selectedExtras.includes(e.id));
 
+      // 1) Guardar en Supabase
       const { error } = await supabase.from("quotes").insert({
         user_id: user?.id ?? null,
         name: name.trim(),
@@ -146,6 +147,29 @@ export function QuoteCalculator({ open, onClose }: Props) {
         return false;
       }
 
+      // 2) Enviar emails (no bloqueante — si falla, igual mostramos éxito)
+      try {
+        await fetch("/api/send-quote-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: name.trim(),
+            email: email.trim().toLowerCase(),
+            phone: phone.trim(),
+            company: company.trim() || undefined,
+            projectTypeLabel: pt?.label || "",
+            basePrice,
+            modules: modsList.map((m) => ({ label: m.label, price: m.price })),
+            modulesPrice,
+            extras: extsList.map((e) => ({ label: e.label, price: e.price })),
+            extrasPrice,
+            total,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("Error enviando emails:", emailErr);
+      }
+
       setSaving(false);
       setSaved(true);
       return true;
@@ -153,30 +177,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
       console.error(e);
       setSaving(false);
       return false;
-    }
-  };
-
-  const handleWhatsApp = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const ok = await saveQuote();
-    if (ok) {
-      window.open(waLink, "_blank");
-      setTimeout(() => {
-        setSaved(false);
-        onClose();
-      }, 1500);
-    }
-  };
-
-  const handleEmail = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const ok = await saveQuote();
-    if (ok) {
-      window.location.href = mailLink;
-      setTimeout(() => {
-        setSaved(false);
-        onClose();
-      }, 1500);
     }
   };
 
