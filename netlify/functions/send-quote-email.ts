@@ -52,7 +52,7 @@ function emailShell(preheader: string, content: string): string {
     body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
     table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-collapse: collapse; }
     img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
-    body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; background-color: #0B0B0B; }
+    body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; background-color: #0A1A2F; }
     a { color: #0066FF; }
     @media only screen and (max-width: 620px) {
       .container { width: 100% !important; }
@@ -71,12 +71,12 @@ function emailShell(preheader: string, content: string): string {
   </div>
 
   <!-- Wrapper de fondo -->
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#0B0B0B; min-height:100vh;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#0A1A2F; min-height:100vh;">
     <tr>
       <td align="center" style="padding: 24px 12px;">
 
         <!-- Contenedor principal (600px) -->
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="container" style="width:600px; max-width:600px; background-color:#0A1A2F; border-radius:16px; overflow:hidden; box-shadow: 0 20px 60px rgba(0,102,255,0.15);">
+       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="container" style="width:600px; max-width:600px; background-color:#0A1A2F; border-radius:0; overflow:hidden;">
 
           <!-- ══════════ HEADER ══════════ -->
           <tr>
