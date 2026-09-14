@@ -24,7 +24,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // Precarga con datos del usuario logueado
   useEffect(() => {
     if (!open) return;
     if (user) {
@@ -35,7 +34,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
     }
   }, [open, user, profile]);
 
-  // Scroll lock
   useEffect(() => {
     if (!open) return;
     const original = document.body.style.overflow;
@@ -43,7 +41,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
     return () => { document.body.style.overflow = original; };
   }, [open]);
 
-  // ESC
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -106,9 +103,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
     return null;
   };
 
-  /* ══════════════════════════════════════════════════════════
-     GUARDAR EN SUPABASE
-     ══════════════════════════════════════════════════════════ */
   const saveQuote = async (): Promise<boolean> => {
     const err = validateContact();
     if (err) {
@@ -147,7 +141,7 @@ export function QuoteCalculator({ open, onClose }: Props) {
         return false;
       }
 
-      // 2) Enviar emails (no bloqueante — si falla, igual mostramos éxito)
+      // 2) Enviar emails (no bloqueante)
       try {
         await fetch("/api/send-quote-email", {
           method: "POST",
@@ -180,14 +174,36 @@ export function QuoteCalculator({ open, onClose }: Props) {
     }
   };
 
+  const handleWhatsApp = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const ok = await saveQuote();
+    if (ok) {
+      window.open(waLink, "_blank");
+      setTimeout(() => {
+        setSaved(false);
+        onClose();
+      }, 1500);
+    }
+  };
+
+  const handleEmail = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const ok = await saveQuote();
+    if (ok) {
+      window.location.href = mailLink;
+      setTimeout(() => {
+        setSaved(false);
+        onClose();
+      }, 1500);
+    }
+  };
+
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 md:p-6" role="dialog" aria-modal="true">
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
 
-      {/* Panel */}
       <div
         className="relative w-full max-w-6xl max-h-[92vh] rounded-3xl overflow-hidden flex flex-col animate-slide-up"
         style={{
@@ -196,41 +212,26 @@ export function QuoteCalculator({ open, onClose }: Props) {
           boxShadow: "0 40px 120px -20px rgba(0,102,255,0.4)",
         }}
       >
-        {/* Header */}
         <div
           className="relative px-5 md:px-8 py-4 md:py-5 flex items-center justify-between border-b flex-shrink-0"
           style={{ borderColor: "rgba(255,255,255,0.06)" }}
         >
           <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: "linear-gradient(135deg, #0066FF 0%, #00C2FF 100%)" }}
-            >
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #0066FF 0%, #00C2FF 100%)" }}>
               <Sparkles size={18} className="text-white" />
             </div>
             <div>
-              <div className="text-base md:text-lg font-bold" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                Cotiza tu software
-              </div>
-              <div className="text-[10px] md:text-xs" style={{ color: "#8B94A8", fontFamily: "'JetBrains Mono', monospace" }}>
-                Precio estimado en tiempo real
-              </div>
+              <div className="text-base md:text-lg font-bold" style={{ fontFamily: "'Poppins', sans-serif" }}>Cotiza tu software</div>
+              <div className="text-[10px] md:text-xs" style={{ color: "#8B94A8", fontFamily: "'JetBrains Mono', monospace" }}>Precio estimado en tiempo real</div>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="w-10 h-10 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/5 transition-colors"
-            aria-label="Cerrar"
-          >
+          <button onClick={onClose} className="w-10 h-10 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/5 transition-colors" aria-label="Cerrar">
             <X size={20} />
           </button>
         </div>
 
-        {/* Body */}
         <div className="flex-1 overflow-y-auto px-5 md:px-8 py-6 grid lg:grid-cols-[1fr_340px] gap-6 lg:gap-8">
-          {/* Columna izquierda — opciones */}
           <div className="space-y-8">
-            {/* Tipo de proyecto */}
             <div>
               <h3 className="text-xs md:text-sm tracking-[0.2em] uppercase mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#0066FF" }}>
                 1 · Tipo de proyecto
@@ -250,12 +251,8 @@ export function QuoteCalculator({ open, onClose }: Props) {
                       }}
                     >
                       <div className="flex items-start justify-between gap-2 mb-1">
-                        <span className="font-semibold text-sm" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                          {p.label}
-                        </span>
-                        <span className="text-xs font-bold flex-shrink-0" style={{ color: "#00C2FF", fontFamily: "'JetBrains Mono', monospace" }}>
-                          {formatPrice(p.price)}
-                        </span>
+                        <span className="font-semibold text-sm" style={{ fontFamily: "'Poppins', sans-serif" }}>{p.label}</span>
+                        <span className="text-xs font-bold flex-shrink-0" style={{ color: "#00C2FF", fontFamily: "'JetBrains Mono', monospace" }}>{formatPrice(p.price)}</span>
                       </div>
                       <p className="text-xs" style={{ color: "#8B94A8" }}>{p.desc}</p>
                     </button>
@@ -264,7 +261,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
               </div>
             </div>
 
-            {/* Módulos */}
             <div>
               <h3 className="text-xs md:text-sm tracking-[0.2em] uppercase mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#0066FF" }}>
                 2 · Módulos {selectedModules.length > 0 && `(${selectedModules.length})`}
@@ -301,7 +297,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
               </div>
             </div>
 
-            {/* Extras */}
             <div>
               <h3 className="text-xs md:text-sm tracking-[0.2em] uppercase mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#0066FF" }}>
                 3 · Extras {selectedExtras.length > 0 && `(${selectedExtras.length})`}
@@ -339,7 +334,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
             </div>
           </div>
 
-          {/* Columna derecha — resumen */}
           <aside className="lg:sticky lg:top-0 h-fit">
             <div className="rounded-2xl border p-5 md:p-6" style={{ background: "rgba(0,0,0,0.35)", borderColor: "rgba(0,102,255,0.3)" }}>
               <div className="text-xs tracking-widest uppercase mb-4" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#8B94A8" }}>
@@ -373,7 +367,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
                 </div>
               </div>
 
-              {/* ══════════ FORMULARIO DE CONTACTO ══════════ */}
               {showContactForm ? (
                 <div className="space-y-3 mb-4">
                   <div className="text-xs tracking-widest uppercase mb-2" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#0066FF" }}>
@@ -431,7 +424,7 @@ export function QuoteCalculator({ open, onClose }: Props) {
                   <button
                     onClick={() => setShowContactForm(false)}
                     className="text-xs transition-colors hover:text-white"
-                    style={{ color: "#8B94A8" }}
+                    style={{ color: "#8B94A8", background: "transparent", border: "none", cursor: "pointer" }}
                   >
                     ← Volver a la configuración
                   </button>
@@ -443,6 +436,7 @@ export function QuoteCalculator({ open, onClose }: Props) {
                   style={{
                     background: "linear-gradient(135deg, #0066FF 0%, #0052CC 100%)",
                     boxShadow: "0 12px 32px rgba(0,102,255,0.35)",
+                    cursor: "pointer",
                   }}
                 >
                   Continuar
@@ -450,16 +444,17 @@ export function QuoteCalculator({ open, onClose }: Props) {
                 </button>
               )}
 
-              {/* ══════════ BOTONES DE ENVÍO ══════════ */}
               {showContactForm && !saved && (
                 <>
                   <button
-                    onClick={handleWhatsApp}
+                    onClick={handleWhatsApp as any}
                     disabled={saving}
                     className="group flex items-center justify-center gap-2 w-full py-4 rounded-xl font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
                     style={{
                       background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
                       boxShadow: "0 12px 32px rgba(37,211,102,0.35)",
+                      cursor: saving ? "not-allowed" : "pointer",
+                      border: "none",
                     }}
                   >
                     {saving ? (
@@ -477,7 +472,7 @@ export function QuoteCalculator({ open, onClose }: Props) {
                   </button>
 
                   <button
-                    onClick={handleEmail}
+                    onClick={handleEmail as any}
                     disabled={saving}
                     className="mt-3 flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-medium border transition-colors hover:bg-white/5 disabled:opacity-60"
                     style={{ borderColor: "rgba(255,255,255,0.12)", color: "#FFFFFF", background: "transparent", cursor: saving ? "not-allowed" : "pointer" }}
@@ -488,7 +483,6 @@ export function QuoteCalculator({ open, onClose }: Props) {
                 </>
               )}
 
-              {/* Feedback guardado */}
               {saved && (
                 <div
                   className="flex items-center justify-center gap-2 py-4 rounded-xl text-sm font-semibold animate-slide-up"
