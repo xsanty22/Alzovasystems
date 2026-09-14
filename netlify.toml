@@ -9,7 +9,14 @@
   port = 8888
   autoLaunch = false
 
+# API → Netlify Functions
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
+  status = 200
+
+# SPA fallback → cualquier ruta va a index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
   status = 200
