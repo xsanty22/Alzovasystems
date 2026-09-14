@@ -23,6 +23,7 @@ interface Profile {
   phone: string | null;
   company: string | null;
   business_type: string | null;
+  is_admin: boolean | null;
   created_at: string;
 }
 
@@ -47,14 +48,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-    if (!error && data) setProfile(data as Profile);
-  };
-
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .single();
+  
+  console.log("🔍 fetchProfile:", { userId, data, error });
+  
+  if (error) {
+    console.error("❌ Error fetching profile:", error);
+    return;
+  }
+  
+  if (data) {
+    console.log("✅ Profile cargado. is_admin:", data.is_admin);
+    setProfile(data as Profile);
+  }
+};
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);

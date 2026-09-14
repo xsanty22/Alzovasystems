@@ -21,6 +21,15 @@ import { AuthModal } from "./components/AuthModal";
 import { AccountModal } from "./components/AccountModal";
 import { AdminLeads } from "./pages/AdminLeads";
 
+/* ══════════════════════════════════════════════════════════
+   EMAILS DE ADMIN — Agrega aquí más emails si quieres
+   ══════════════════════════════════════════════════════════ */
+const ADMIN_EMAILS = [
+  "santixd06@gmail.com",
+  "contacto@alzova.systems",
+  // Agrega más aquí cuando tengas otros admins
+];
+
 function LandingPage() {
   const { scrolled, progress } = useScrollProgress();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -80,9 +89,15 @@ function LandingPage() {
   );
 }
 
+/* ══════════════════════════════════════════════════════════
+   Ruta protegida de admin — Verifica con email
+   ══════════════════════════════════════════════════════════ */
 function AdminRoute() {
-  const { user, profile, loading } = useAuth();
+  const { user, loading } = useAuth();
 
+  console.log("🎯 AdminRoute - user:", user?.email, "loading:", loading);
+
+  // Esperando a que cargue la sesión
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -96,11 +111,24 @@ function AdminRoute() {
     );
   }
 
-  if (!user) return <Navigate to="/" replace />;
+  // No hay usuario logueado
+  if (!user) {
+    console.log("❌ Sin usuario → redirige al home");
+    return <Navigate to="/" replace />;
+  }
 
-  const isAdmin = (profile as any)?.is_admin === true;
-  if (!isAdmin) return <Navigate to="/" replace />;
+  // Verificar por email
+  const userEmail = user.email?.toLowerCase().trim() || "";
+  const isAdmin = ADMIN_EMAILS.map(e => e.toLowerCase()).includes(userEmail);
 
+  console.log("🔐 Email:", userEmail, "es admin?:", isAdmin);
+
+  if (!isAdmin) {
+    console.log("❌ No es admin → redirige al home");
+    return <Navigate to="/" replace />;
+  }
+
+  console.log("✅ Es admin → muestra panel");
   return <AdminLeads />;
 }
 
