@@ -76,7 +76,7 @@ function emailShell(preheader: string, content: string): string {
       <td align="center" style="padding: 24px 12px;">
 
         <!-- Contenedor principal (600px) -->
-       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="container" style="width:600px; max-width:600px; background-color:#0A1A2F; border-radius:0; overflow:hidden;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="container" style="width:600px; max-width:600px; background-color:#0A1A2F; border-radius:16px; overflow:hidden; border:1px solid rgba(0,194,255,0.25); box-shadow: 0 20px 60px rgba(0,102,255,0.25);">
 
           <!-- ══════════ HEADER ══════════ -->
           <tr>
