@@ -5,7 +5,7 @@ import { testimonials } from "../../data/testimonials";
 
 export function Testimonials() {
   return (
-    <section className="py-28 md:py-36">
+    <section className="py-20 md:py-24">
       <div className="max-w-7xl mx-auto px-6">
         <Reveal>
           <Badge>Testimonios</Badge>

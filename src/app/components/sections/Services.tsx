@@ -42,7 +42,7 @@ export function Services({ onOpenQuote }: Props) {
   };
 
   return (
-    <section id="servicios" className="py-28 md:py-36 relative overflow-hidden">
+    <section id="servicios" className="py-20 md:py-24 relative overflow-hidden">
       {/* Grid decorativa de fondo */}
       <div
         className="absolute inset-0 opacity-[0.06] pointer-events-none"

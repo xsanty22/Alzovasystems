@@ -4,7 +4,7 @@ import { process } from "../../data/process";
 
 export function Process() {
   return (
-    <section id="proceso" className="py-28 md:py-36" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(10,26,47,0.5) 50%, transparent 100%)" }}>
+    <section id="proceso" className="py-20 md:py-24" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(10,26,47,0.5) 50%, transparent 100%)" }}>
       <div className="max-w-7xl mx-auto px-6">
         <Reveal>
           <Badge>Cómo trabajamos</Badge>

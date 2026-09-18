@@ -2,6 +2,7 @@ import { ArrowRight, Menu, X, User as UserIcon, LogOut } from "lucide-react";
 import { navItems } from "../../data/nav";
 import { useAuth } from "../../hooks/useAuth";
 import logoUrl from "../../../assets/logo.svg";
+import { Link } from "react-router-dom";
 
 interface Props {
   scrolled: boolean;
@@ -94,25 +95,22 @@ export function Navbar({
                 Cotiza tu proyecto <ArrowRight size={15} />
               </a>
 
-              <button
-                onClick={onOpenAccount}
-                className="group flex items-center gap-2.5 pl-1.5 pr-4 py-1.5 rounded-xl border transition-all duration-300 hover:-translate-y-0.5"
-                style={{
-                  borderColor: "rgba(0,102,255,0.35)",
-                  background: "rgba(0,102,255,0.08)",
-                }}
-              >
-                <div
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold"
+              <Link
+                  to="/dashboard"
+                  className="group flex items-center gap-2.5 pl-1.5 pr-4 py-1.5 rounded-xl border transition-all duration-300 hover:-translate-y-0.5"
                   style={{
-                    background: "linear-gradient(135deg, #0066FF, #00C2FF)",
-                    color: "#FFFFFF",
+                    borderColor: "rgba(0,102,255,0.35)",
+                    background: "rgba(0,102,255,0.08)",
                   }}
                 >
-                  {displayName.charAt(0).toUpperCase()}
-                </div>
-                <span className="text-sm font-semibold">{displayName}</span>
-              </button>
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold"
+                    style={{ background: "linear-gradient(135deg, #0066FF, #00C2FF)", color: "#FFFFFF" }}
+                  >
+                    {displayName.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-sm font-semibold">{displayName}</span>
+                </Link>
 
               <button
                 onClick={signOut}

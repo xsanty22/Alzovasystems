@@ -1,7 +1,9 @@
-import { ArrowRight, Search, Globe, Code2, Shield, CheckCircle2, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Search, Globe, Code2, Shield, CheckCircle2, Sparkles, User, Mail, Phone, Loader2 } from "lucide-react";
 import { Reveal } from "../ui/Reveal";
 import { Badge } from "../ui/Badge";
 import { WHATSAPP_PHONE } from "../../data/social";
+import { supabase } from "../../lib/supabase";
 
 const auditTypes = [
   {
@@ -27,12 +29,56 @@ const auditTypes = [
 ];
 
 export function Auditorias() {
-  const waLink = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(
-    "Hola ALZOVA SYSTEMS! Quiero agendar mi auditoria gratuita."
-  )}`;
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!name.trim() || !email.includes("@") || phone.replace(/\D/g, "").length < 7) {
+      alert("Por favor completa todos los campos correctamente");
+      return;
+    }
+
+    setSubmitting(true);
+
+    const { error } = await supabase.from("leads").insert({
+      source: "auditoria",
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+      company: null,
+      message: null,
+      metadata: { requested_audit: true },
+      status: "new",
+    });
+
+    setSubmitting(false);
+
+    if (error) {
+      console.error("Error guardando lead:", error);
+      alert("Hubo un error. Intenta de nuevo.");
+      return;
+    }
+
+    setSaved(true);
+    setTimeout(() => {
+      const msg = encodeURIComponent(
+        `Hola ALZOVA! Soy ${name.trim()}. Quiero agendar mi auditoria gratuita. Mi email: ${email.trim()}`
+      );
+      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${msg}`, "_blank");
+      setSaved(false);
+      setName("");
+      setEmail("");
+      setPhone("");
+    }, 1200);
+  };
 
   return (
-    <section id="auditorias" className="py-28 md:py-36 relative" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(10,26,47,0.5) 50%, transparent 100%)" }}>
+    <section id="auditorias" className="py-20 md:py-24 relative" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(10,26,47,0.5) 50%, transparent 100%)" }}>
       <div className="max-w-7xl mx-auto px-6">
         <Reveal>
           <Badge>Auditorias gratuitas</Badge>
@@ -49,22 +95,12 @@ export function Auditorias() {
             const Icon = a.icon;
             return (
               <Reveal key={a.title} delay={i * 80}>
-                <div
-                  className="group relative h-full p-6 rounded-2xl border transition-all duration-500 hover:-translate-y-1"
-                  style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}
-                >
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-transform duration-500 group-hover:scale-110"
-                    style={{ background: "rgba(0,102,255,0.12)", border: "1px solid rgba(0,102,255,0.25)" }}
-                  >
+                <div className="group relative h-full p-6 rounded-2xl border transition-all duration-500 hover:-translate-y-1" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-transform duration-500 group-hover:scale-110" style={{ background: "rgba(0,102,255,0.12)", border: "1px solid rgba(0,102,255,0.25)" }}>
                     <Icon size={20} style={{ color: "#0066FF" }} />
                   </div>
-                  <h3 className="text-base font-bold mb-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                    {a.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "#8B94A8" }}>
-                    {a.desc}
-                  </p>
+                  <h3 className="text-base font-bold mb-2" style={{ fontFamily: "'Poppins', sans-serif" }}>{a.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: "#8B94A8" }}>{a.desc}</p>
                 </div>
               </Reveal>
             );
@@ -80,18 +116,13 @@ export function Auditorias() {
               boxShadow: "0 20px 60px -20px rgba(0,102,255,0.4)",
             }}
           >
-            <div
-              className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-30 blur-3xl pointer-events-none"
-              style={{ background: "#0066FF" }}
-            />
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-30 blur-3xl pointer-events-none" style={{ background: "#0066FF" }} />
 
             <div className="relative grid lg:grid-cols-[1fr_auto] gap-8 items-center">
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5" style={{ background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.35)" }}>
                   <Sparkles size={14} style={{ color: "#22C55E" }} />
-                  <span className="text-xs font-bold tracking-widest uppercase" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#22C55E" }}>
-                    100% Gratis
-                  </span>
+                  <span className="text-xs font-bold tracking-widest uppercase" style={{ fontFamily: "'JetBrains Mono', monospace", color: "#22C55E" }}>100% Gratis</span>
                 </div>
 
                 <h3 className="text-3xl md:text-4xl font-extrabold leading-tight mb-4" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -103,11 +134,7 @@ export function Auditorias() {
                 </p>
 
                 <ul className="space-y-2.5 mb-8">
-                  {[
-                    "Informe detallado por escrito",
-                    "Recomendaciones priorizadas",
-                    "Sin obligacion de contratar nada",
-                  ].map((item) => (
+                  {["Informe detallado por escrito", "Recomendaciones priorizadas", "Sin obligacion de contratar nada"].map((item) => (
                     <li key={item} className="flex items-center gap-3">
                       <CheckCircle2 size={18} style={{ color: "#22C55E", flexShrink: 0 }} />
                       <span className="text-sm" style={{ color: "#E5E7EB" }}>{item}</span>
@@ -115,38 +142,89 @@ export function Auditorias() {
                   ))}
                 </ul>
 
-                <a
-                  href={waLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="neon-btn group inline-flex items-center gap-2 px-7 py-4 rounded-xl font-bold text-white transition-all duration-300"
-                  style={{
-                    background: "linear-gradient(135deg, #0066FF 0%, #0052CC 100%)",
-                    fontFamily: "'Poppins', sans-serif",
-                    fontSize: "15px",
-                    border: "1px solid rgba(0,194,255,0.5)",
-                  }}
-                >
-                  <Sparkles size={16} className="relative z-10" />
-                  <span className="relative z-10">Solicitar auditoria gratis</span>
-                  <ArrowRight size={16} className="relative z-10 transition-transform group-hover:translate-x-1" />
-                </a>
+                {saved ? (
+                  <div
+                    className="p-5 rounded-2xl text-center animate-slide-up"
+                    style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", maxWidth: 420 }}
+                  >
+                    <div className="text-2xl mb-2">✅</div>
+                    <div className="text-sm font-bold" style={{ color: "#86EFAC" }}>
+                      ¡Solicitud recibida! Abriendo WhatsApp...
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-3 max-w-md">
+                    <div className="relative">
+                      <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#8B94A8" }} />
+                      <input
+                        type="text"
+                        placeholder="Tu nombre *"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        className="w-full pl-9 pr-3 py-3 rounded-xl border text-sm focus:outline-none focus:border-[#0066FF]"
+                        style={{ background: "rgba(0,0,0,0.3)", borderColor: "rgba(255,255,255,0.15)", color: "#FFFFFF" }}
+                      />
+                    </div>
+                    <div className="relative">
+                      <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#8B94A8" }} />
+                      <input
+                        type="email"
+                        placeholder="tu@email.com *"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="w-full pl-9 pr-3 py-3 rounded-xl border text-sm focus:outline-none focus:border-[#0066FF]"
+                        style={{ background: "rgba(0,0,0,0.3)", borderColor: "rgba(255,255,255,0.15)", color: "#FFFFFF" }}
+                      />
+                    </div>
+                    <div className="relative">
+                      <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#8B94A8" }} />
+                      <input
+                        type="tel"
+                        placeholder="Teléfono / WhatsApp *"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                        className="w-full pl-9 pr-3 py-3 rounded-xl border text-sm focus:outline-none focus:border-[#0066FF]"
+                        style={{ background: "rgba(0,0,0,0.3)", borderColor: "rgba(255,255,255,0.15)", color: "#FFFFFF" }}
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="neon-btn w-full inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-bold text-white transition-all duration-300"
+                      style={{
+                        background: "linear-gradient(135deg, #0066FF 0%, #0052CC 100%)",
+                        fontFamily: "'Poppins', sans-serif",
+                        fontSize: "15px",
+                        border: "1px solid rgba(0,194,255,0.5)",
+                        cursor: submitting ? "not-allowed" : "pointer",
+                        opacity: submitting ? 0.6 : 1,
+                      }}
+                    >
+                      {submitting ? (
+                        <>
+                          <Loader2 size={16} className="animate-spin relative z-10" />
+                          <span className="relative z-10">Guardando...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles size={16} className="relative z-10" />
+                          <span className="relative z-10">Solicitar auditoria gratis</span>
+                          <ArrowRight size={16} className="relative z-10" />
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
               </div>
 
               <div className="hidden lg:flex flex-col items-center justify-center">
-                <div
-                  className="w-48 h-48 rounded-full flex flex-col items-center justify-center"
-                  style={{
-                    background: "linear-gradient(135deg, #0066FF 0%, #00C2FF 100%)",
-                    boxShadow: "0 24px 80px -20px rgba(0,102,255,0.6)",
-                  }}
-                >
-                  <span className="text-6xl font-black" style={{ fontFamily: "'Poppins', sans-serif", color: "#FFFFFF" }}>
-                    $0
-                  </span>
-                  <span className="text-xs tracking-widest uppercase mt-1" style={{ fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.9)" }}>
-                    Sin costo
-                  </span>
+                <div className="w-48 h-48 rounded-full flex flex-col items-center justify-center" style={{ background: "linear-gradient(135deg, #0066FF 0%, #00C2FF 100%)", boxShadow: "0 24px 80px -20px rgba(0,102,255,0.6)" }}>
+                  <span className="text-6xl font-black" style={{ fontFamily: "'Poppins', sans-serif", color: "#FFFFFF" }}>$0</span>
+                  <span className="text-xs tracking-widest uppercase mt-1" style={{ fontFamily: "'JetBrains Mono', monospace", color: "rgba(255,255,255,0.9)" }}>Sin costo</span>
                 </div>
               </div>
             </div>

@@ -10,7 +10,7 @@ interface Props {
 
 export function Solutions({ onOpenQuote, onOpenTechServices }: Props) {
   return (
-    <section id="soluciones" className="py-28 md:py-36 relative">
+    <section id="soluciones" className="py-20 md:py-24 relative">
       <div className="max-w-7xl mx-auto px-6">
         <Reveal>
           <Badge>Soluciones</Badge>

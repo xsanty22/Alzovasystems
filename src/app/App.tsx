@@ -13,6 +13,7 @@ import { Services } from "./components/sections/Services";
 import { Auditorias } from "./components/sections/Auditorias";
 import { Stats } from "./components/sections/Stats";
 import { Testimonials } from "./components/sections/Testimonials";
+import { ReviewsSection } from "./components/sections/ReviewsSection";
 import { CTA } from "./components/sections/CTA";
 import { WhatsAppFloat } from "./components/WhatsAppFloat";
 import { QuoteCalculator } from "./components/QuoteCalculator";
@@ -20,6 +21,8 @@ import { TechServicesModal } from "./components/TechServicesModal";
 import { AuthModal } from "./components/AuthModal";
 import { AccountModal } from "./components/AccountModal";
 import { AdminLeads } from "./pages/AdminLeads";
+import { Dashboard } from "./pages/Dashboard";
+
 
 /* ══════════════════════════════════════════════════════════
    EMAILS DE ADMIN — Agrega aquí más emails si quieres
@@ -75,7 +78,7 @@ function LandingPage() {
         <Services onOpenQuote={() => setQuoteOpen(true)} />
         <Auditorias />
         <Stats />
-        <Testimonials />
+        <ReviewsSection onOpenAuth={openRegister} />
         <CTA />
       </main>
 
@@ -132,12 +135,37 @@ function AdminRoute() {
   return <AdminLeads />;
 }
 
+/* ══════════════════════════════════════════════════════════
+   Ruta protegida del cliente (cualquier usuario logueado)
+   ══════════════════════════════════════════════════════════ */
+function UserRoute() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-full border-4 border-[#0066FF] border-t-transparent animate-spin mx-auto mb-4" />
+          <div className="text-sm" style={{ color: "#8B94A8", fontFamily: "'JetBrains Mono', monospace" }}>
+            Verificando sesión...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return <Navigate to="/" replace />;
+
+  return <Dashboard />;
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/admin/leads" element={<AdminRoute />} />
+         <Route path="/dashboard" element={<UserRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>

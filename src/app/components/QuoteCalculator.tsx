@@ -64,7 +64,7 @@ export function QuoteCalculator({ open, onClose }: Props) {
   const total = useMemo(() => basePrice + modulesPrice + extrasPrice, [basePrice, modulesPrice, extrasPrice]);
 
   const formatPrice = (n: number) =>
-    new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
+    new Intl.NumberFormat("en-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n);
 
   const waMessage = useMemo(() => {
     const pt = projectTypes.find((p) => p.id === projectType);
@@ -103,7 +103,7 @@ export function QuoteCalculator({ open, onClose }: Props) {
     return null;
   };
 
-  const saveQuote = async (): Promise<boolean> => {
+    const saveQuote = async (): Promise<boolean> => {
     const err = validateContact();
     if (err) {
       alert(err);
@@ -116,21 +116,25 @@ export function QuoteCalculator({ open, onClose }: Props) {
       const modsList = modules.filter((m) => selectedModules.includes(m.id));
       const extsList = extras.filter((e) => selectedExtras.includes(e.id));
 
-      // 1) Guardar en Supabase
-      const { error } = await supabase.from("quotes").insert({
+      // 1) Guardar en tabla leads (unificada)
+      const { error } = await supabase.from("leads").insert({
         user_id: user?.id ?? null,
+        source: "cotizador",
         name: name.trim(),
         email: email.trim().toLowerCase(),
         phone: phone.trim(),
         company: company.trim() || null,
-        project_type: projectType,
-        project_type_label: pt?.label || "",
-        base_price: basePrice,
-        modules: modsList,
-        modules_price: modulesPrice,
-        extras: extsList,
-        extras_price: extrasPrice,
-        total,
+        message: null,
+        metadata: {
+          project_type: projectType,
+          project_type_label: pt?.label || "",
+          base_price: basePrice,
+          modules: modsList.map((m) => ({ label: m.label, price: m.price })),
+          modules_price: modulesPrice,
+          extras: extsList.map((e) => ({ label: e.label, price: e.price })),
+          extras_price: extrasPrice,
+          total,
+        },
         status: "new",
       });
 
